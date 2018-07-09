@@ -1,0 +1,53 @@
+html.doc
+
+  <ion-list>
+    <button ion-item *ngFor="let item of items" (click)="itemTapped($event, item)">
+      <ion-icon class="item-title" item-start></ion-icon>
+      {{item.title}}
+      <div class="item-note" item-end>
+        {{item.note}}
+      </div>
+    </button>
+  </ion-list>
+
+  <div *ngIf="selectedItem" padding>
+    You navigated here from <b>{{selectedItem.title}}</b>
+  </div>
+
+ts.doc
+import { Component } from '@angular/core';
+import { NavController, NavParams } from 'ionic-angular';
+import { DetailsPage } from '../details/details';
+
+@Component({
+  selector: 'page-list',
+  templateUrl: 'list.html'
+})
+export class ListPage {
+
+  selectedItem: any;
+  items: Array<{title: string, note: string}>;
+
+  constructor(public navCtrl: NavController, public navParams: NavParams, platform: Platform) {
+
+    // If we navigated to this page, we will have an item available as a nav param
+    this.selectedItem = navParams.get('item');
+
+    // Let's populate this page with some filler content for funzies
+
+    this.items = [];
+    for (let i = 1; i < 11; i++) {
+      this.items.push({
+        title: 'Report ' + i,
+        note: 'This is report #' + i,
+      });
+    }
+  }
+
+  itemTapped(event, item) {
+    // That's right, we're pushing to ourselves!
+    this.navCtrl.push(DetailsPage, {
+      item: item
+    });
+  }
+}
